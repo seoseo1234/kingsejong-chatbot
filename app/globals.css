@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Joseon Palace Theme Colors */
+  --royal-red: #8B0000;
+  --royal-red-light: #B22222;
+  --palace-gold: #D4AF37;
+  --palace-gold-light: #F3E5AB;
+  --deep-blue: #0F1B29;
+  --hanji-paper: #F4EEDF;
+  --text-dark: #2C2825;
+  --text-light: #FAF9F6;
+  --border-color: rgba(212, 175, 55, 0.3);
+  
+  --font-serif: 'Noto Serif KR', serif;
+  --font-sans: 'Noto Sans KR', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--hanji-paper);
+  color: var(--text-dark);
+  /* Sublte paper texture using CSS radial gradients */
+  background-image: radial-gradient(var(--palace-gold-light) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--royal-red);
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Global animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

@@ -49,7 +49,10 @@ export async function POST(req) {
     });
 
     // history 포맷을 Gemini API 형식으로 변환 ({ role: "user" | "model", parts: [{ text }] })
-    const formattedHistory = history.map(msg => ({
+    // Gemini API의 제약사항: history의 첫 번째 객체는 반드시 role이 'user'여야 합니다.
+    const validHistory = history.length > 0 && history[0].role === 'assistant' ? history.slice(1) : history;
+    
+    const formattedHistory = validHistory.map(msg => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }]
     }));

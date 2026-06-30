@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { signInWithEmailAndPassword, signInAnonymously } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInAnonymously, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import styles from './login.module.css';
 
@@ -37,8 +37,20 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      router.push('/');
+    } catch (err) {
+      console.error(err);
+      setError(`구글 로그인 실패: ${err.code || err.message}`);
+    }
+  };
+
   const handleRegister = () => {
-    alert('새 어린이 등록 기능은 현재 준비 중입니다!');
+    router.push('/register');
   };
 
   return (
@@ -68,7 +80,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={styles.input}
-                  placeholder="어린이 이름 (ID)"
+                  placeholder="어린이 이름 (이메일 ID)"
                   required
                 />
               </div>
@@ -102,6 +114,10 @@ export default function LoginPage() {
 
               <button type="button" onClick={handleGuestLogin} className={styles.guestBtn}>
                 가입 안하고 둘러보기 👀
+              </button>
+              
+              <button type="button" onClick={handleGoogleLogin} className={styles.googleBtn}>
+                <span className={styles.googleIcon}>G</span> Google 계정으로 로그인
               </button>
             </div>
           </form>

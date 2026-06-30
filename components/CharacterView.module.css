@@ -2,14 +2,14 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  height: 200px;
+  height: 250px;
   position: relative;
   margin-bottom: 20px;
 }
 
 .character {
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   background-image: url('/images/sejong.png');
   background-size: cover;
   background-position: center;
@@ -17,6 +17,16 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   border: 4px solid var(--palace-gold);
   transition: all 0.3s ease;
+}
+
+@media (min-width: 800px) {
+  .container {
+    height: 350px;
+  }
+  .character {
+    width: 280px;
+    height: 280px;
+  }
 }
 
 /* Animations based on state */

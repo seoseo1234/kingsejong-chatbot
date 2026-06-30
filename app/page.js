@@ -8,6 +8,7 @@ import CharacterView from '@/components/CharacterView';
 import ChatBubble from '@/components/ChatBubble';
 import SuggestionChips from '@/components/SuggestionChips';
 import LockScreen from '@/components/LockScreen';
+import EthicsGate from '@/components/EthicsGate';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -15,11 +16,12 @@ export default function Home() {
   const [loadingAuth, setLoadingAuth] = useState(true);
   
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: '반갑다, 꼬마야! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?' }
+    { role: 'assistant', content: '반갑다, 2학년 학생들아! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?' }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const [showEthicsGate, setShowEthicsGate] = useState(true);
   
   const chatContainerRef = useRef(null);
   const router = useRouter();
@@ -30,11 +32,20 @@ export default function Home() {
         router.push('/login');
       } else {
         setUser(currentUser);
+        const agreed = localStorage.getItem('ethics_agreed');
+        if (agreed === 'true') {
+          setShowEthicsGate(false);
+        }
       }
       setLoadingAuth(false);
     });
     return () => unsubscribe();
   }, [router]);
+
+  const handleAgreeEthics = () => {
+    localStorage.setItem('ethics_agreed', 'true');
+    setShowEthicsGate(false);
+  };
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -94,6 +105,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      {showEthicsGate && <EthicsGate onAgree={handleAgreeEthics} />}
       {isLocked && <LockScreen onUnlock={() => setIsLocked(false)} />}
       
       <header className={styles.header}>

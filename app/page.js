@@ -102,34 +102,36 @@ export default function Home() {
         <button onClick={handleLogout} className={styles.logoutBtn}>퇴궐 (로그아웃)</button>
       </header>
 
-      <div className={styles.chatContainer} ref={chatContainerRef}>
-        {messages.map((msg, idx) => (
-          <ChatBubble key={idx} role={msg.role} content={msg.content} />
-        ))}
-        {isTyping && <ChatBubble role="assistant" content="..." />}
-      </div>
+      <div className={styles.chatSide}>
+        <div className={styles.chatContainer} ref={chatContainerRef}>
+          {messages.map((msg, idx) => (
+            <ChatBubble key={idx} role={msg.role} content={msg.content} />
+          ))}
+          {isTyping && <ChatBubble role="assistant" content="..." />}
+        </div>
 
-      <SuggestionChips 
-        onChipClick={(text) => handleSend(text)} 
-        disabled={isTyping || isLocked}
-      />
-
-      <form 
-        className={styles.inputArea} 
-        onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-      >
-        <input 
-          type="text" 
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="세종대왕님께 물어보세요!"
-          className={styles.input}
+        <SuggestionChips 
+          onChipClick={(text) => handleSend(text)} 
           disabled={isTyping || isLocked}
         />
-        <button type="submit" className={styles.sendBtn} disabled={!input.trim() || isTyping || isLocked}>
-          ➤
-        </button>
-      </form>
+
+        <form 
+          className={styles.inputArea} 
+          onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+        >
+          <input 
+            type="text" 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="세종대왕님께 물어보세요!"
+            className={styles.input}
+            disabled={isTyping || isLocked}
+          />
+          <button type="submit" className={styles.sendBtn} disabled={!input.trim() || isTyping || isLocked}>
+            ➤
+          </button>
+        </form>
+      </div>
     </main>
   );
 }

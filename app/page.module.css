@@ -6,6 +6,7 @@
   margin: 0 auto;
   position: relative;
   overflow: hidden;
+  background: var(--hanji-paper);
 }
 
 .header {
@@ -15,6 +16,7 @@
   border-bottom: 2px solid var(--border-color);
   backdrop-filter: blur(5px);
   z-index: 10;
+  position: relative;
 }
 
 .logoutBtn, .finishBtn {
@@ -26,6 +28,7 @@
   color: var(--royal-red);
   border-radius: 8px;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .logoutBtn { right: 10px; }
@@ -34,6 +37,13 @@
 .logoutBtn:hover, .finishBtn:hover {
   background: var(--royal-red);
   color: white;
+}
+
+.chatSide {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
 .chatContainer {
@@ -79,10 +89,32 @@
   font-size: 24px;
   flex-shrink: 0;
   box-shadow: 0 4px 6px rgba(139, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .sendBtn:disabled {
   background: #ccc;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+/* PC Split View Layout */
+@media (min-width: 800px) {
+  .main {
+    flex-direction: row;
+    max-width: 1200px;
+  }
+  
+  .header {
+    flex: 0 0 400px; /* Fixed width for character */
+    border-bottom: none;
+    border-right: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .chatSide {
+    flex: 1;
+  }
 }

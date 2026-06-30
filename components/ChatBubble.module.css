@@ -36,6 +36,58 @@
   border-bottom-left-radius: 4px;
 }
 
+/* Tooltip Styles */
+.hardWordWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.hardWord {
+  color: var(--royal-red);
+  font-weight: bold;
+  cursor: help;
+  text-decoration: underline dashed var(--royal-red);
+  text-underline-offset: 4px;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 250px;
+  background-color: var(--text-dark);
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%; 
+  left: 50%;
+  margin-left: -125px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 16px;
+  line-height: 1.4;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  word-break: keep-all;
+  font-weight: normal;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--text-dark) transparent transparent transparent;
+}
+
+.hardWordWrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;

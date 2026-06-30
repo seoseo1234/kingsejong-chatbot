@@ -8,8 +8,8 @@ export default function LockScreen({ onUnlock }) {
   const [error, setError] = useState(false);
 
   const handleUnlock = () => {
-    // 임시로 하드코딩된 PIN. 실제로는 localStorage나 Firestore에서 가져오거나 검증.
-    const CORRECT_PIN = localStorage.getItem('admin_pin') || '1234'; 
+    // 엄격한 차단 해제를 위한 관리자 PIN
+    const CORRECT_PIN = localStorage.getItem('admin_pin') || 'admin1100'; 
     if (pin === CORRECT_PIN) {
       onUnlock();
     } else {
@@ -31,7 +31,7 @@ export default function LockScreen({ onUnlock }) {
         
         <input 
           type="password" 
-          maxLength={4}
+          maxLength={10}
           value={pin}
           onChange={(e) => setPin(e.target.value)}
           className={styles.pinInput}

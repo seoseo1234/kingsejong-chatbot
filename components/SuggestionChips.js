@@ -3,6 +3,7 @@
 import styles from './SuggestionChips.module.css';
 
 const DEFAULT_CHIPS = [
+  "세종대왕님과 한글 말놀이 할래요!",
   "한글은 왜 만드셨나요?",
   "고기를 정말 좋아하셨나요?",
   "가장 아끼던 신하는 누구인가요?",

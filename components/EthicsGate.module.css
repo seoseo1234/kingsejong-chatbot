@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,54 +15,132 @@
 .modal {
   background: white;
   width: 100%;
-  max-width: 700px;
+  max-width: 900px;
   max-height: 90vh;
-  border-radius: 20px;
-  padding: 30px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 4px solid var(--palace-gold);
+  overflow: hidden;
+  font-family: 'Malgun Gothic', sans-serif;
 }
 
-.title {
+.header {
+  display: flex;
+  background: #f19f2a;
+  color: white;
+  padding: 15px 0;
+}
+
+.header h1 {
+  font-size: 18px;
+  margin: 0;
   text-align: center;
-  color: var(--royal-red);
-  font-size: 28px;
-  margin-bottom: 20px;
-  font-weight: bold;
+}
+
+.header h1:first-child {
+  flex: 0 0 150px;
+  border-right: 1px solid rgba(255,255,255,0.5);
+}
+
+.header h1:last-child {
+  flex: 1;
 }
 
 .guideList {
   flex: 1;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
-  padding-right: 10px;
+  padding: 20px;
+  background: #fff;
 }
 
 .guideItem {
-  background: var(--palace-gold-light);
-  padding: 15px;
-  border-radius: 12px;
-  border-left: 6px solid var(--palace-gold);
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
 }
 
-.guideItem h2 {
-  font-size: 16px;
-  color: var(--royal-red);
-  margin-bottom: 8px;
-  margin-top: 0;
+.badges {
+  flex: 0 0 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-.guideItem p {
+.badgeOrange { background: #ed7d31; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeGreen { background: #70ad47; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeBlue { background: #4472c4; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeYellow { background: #ffc000; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+
+.titleSection {
+  flex: 0 0 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.titleSection h2 {
   font-size: 18px;
+  color: #ed7d31;
+  margin: 0 0 5px 0;
+}
+
+.titleSection h3 {
+  font-size: 15px;
+  color: #333;
   margin: 0;
-  color: var(--text-dark);
+}
+
+.contentSection {
+  flex: 1;
+}
+
+.contentSection h4 {
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  color: #000;
+}
+
+.contentSection p {
+  font-size: 15px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
   word-break: keep-all;
-  line-height: 1.4;
+}
+
+.divider {
+  height: 1px;
+  background: #f19f2a;
+  margin: 20px 0;
+}
+
+.footer {
+  padding: 20px;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.checkboxLabel {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  cursor: pointer;
 }
 
 .agreeBtn {
@@ -70,20 +148,33 @@
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 18px;
+  padding: 15px 40px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(139, 0, 0, 0.2);
-  word-break: keep-all;
 }
 
-.agreeBtn:hover {
+.agreeBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.agreeBtn:not(:disabled):hover {
+  background: #a00000;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(139, 0, 0, 0.3);
 }
 
-.agreeBtn:active {
-  transform: translateY(0);
+@media (max-width: 768px) {
+  .guideItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .header h1:first-child { display: none; }
+  .badges { width: 100%; flex-direction: row; justify-content: flex-start; }
+  .badgeOrange, .badgeGreen, .badgeBlue, .badgeYellow { width: auto; }
+  .titleSection { align-items: flex-start; flex: none; }
+  .titleSection h2 { display: inline-block; margin-right: 10px; }
+  .titleSection h3 { display: inline-block; }
 }

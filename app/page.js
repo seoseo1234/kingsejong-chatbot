@@ -9,6 +9,9 @@ import ChatBubble from '@/components/ChatBubble';
 import SuggestionChips from '@/components/SuggestionChips';
 import LockScreen from '@/components/LockScreen';
 import EthicsGate from '@/components/EthicsGate';
+import SidebarMenu from '@/components/SidebarMenu';
+import AchievementsModal from '@/components/AchievementsModal';
+import FunFactsModal from '@/components/FunFactsModal';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -22,6 +25,8 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [showEthicsGate, setShowEthicsGate] = useState(true);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showFunFacts, setShowFunFacts] = useState(false);
   
   const chatContainerRef = useRef(null);
   const router = useRouter();
@@ -107,10 +112,17 @@ export default function Home() {
     <main className={styles.main}>
       {showEthicsGate && <EthicsGate onAgree={handleAgreeEthics} />}
       {isLocked && <LockScreen onUnlock={() => setIsLocked(false)} />}
+      {showAchievements && <AchievementsModal onClose={() => setShowAchievements(false)} />}
+      {showFunFacts && <FunFactsModal onClose={() => setShowFunFacts(false)} />}
       
       <header className={styles.header}>
         <button onClick={handleFinish} className={styles.finishBtn}>대화 마치기 (요약)</button>
         <CharacterView state={isTyping ? 'thinking' : 'idle'} />
+        <SidebarMenu 
+          onOpenAchievements={() => setShowAchievements(true)}
+          onOpenFunFacts={() => setShowFunFacts(true)}
+          onPlayWordGame={(gameText) => handleSend(gameText)}
+        />
         <button onClick={handleLogout} className={styles.logoutBtn}>퇴궐 (로그아웃)</button>
       </header>
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInAnonymously } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import styles from './login.module.css';
 
@@ -18,7 +18,6 @@ export default function LoginPage() {
     
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // 로그인 성공 시 메인 대화 화면으로 이동
       router.push('/');
     } catch (err) {
       console.error(err);
@@ -26,45 +25,85 @@ export default function LoginPage() {
     }
   };
 
+  const handleGuestLogin = async () => {
+    setError('');
+    try {
+      await signInAnonymously(auth);
+      router.push('/');
+    } catch (err) {
+      console.error(err);
+      setError('둘러보기(게스트 로그인)에 실패했습니다.');
+    }
+  };
+
+  const handleRegister = () => {
+    alert('새 어린이 등록 기능은 현재 준비 중입니다!');
+  };
+
   return (
-    <main className={styles.container}>
-      <div className={`${styles.loginCard} fade-in`}>
-        <h1 className={styles.title}>세종대왕 챗봇</h1>
-        <p className={styles.subtitle}>교사 및 관리자 로그인</p>
+    <main className={styles.mainContainer}>
+      <div className={styles.tabletScreen}>
         
-        <form onSubmit={handleLogin} className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="email" className={styles.label}>이메일</label>
-            <input 
-              id="email"
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.input}
-              placeholder="example@school.kr"
-              required
-            />
-          </div>
+        <div className={styles.titleSection}>
+          <div className={styles.kingIcon}>👨🏻‍🦳</div>
+          <h1 className={styles.title}>
+            <span className={styles.crown}>👑</span>
+            세종대왕님과<br/>함께하는 한글 여행
+          </h1>
+        </div>
+
+        <div className={styles.loginCard}>
+          <h2 className={styles.subtitle}>📚 한글 여행을 시작해 볼까?</h2>
           
-          <div className={styles.inputGroup}>
-            <label htmlFor="password" className={styles.label}>비밀번호</label>
-            <input 
-              id="password"
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          <form onSubmit={handleLogin} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <div className={styles.inputWrapper}>
+                <span className={styles.inputIcon}>✏️</span>
+                <input 
+                  id="email"
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={styles.input}
+                  placeholder="어린이 이름 (ID)"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className={styles.inputGroup}>
+              <div className={styles.inputWrapper}>
+                <span className={styles.inputIcon}>🔒</span>
+                <input 
+                  id="password"
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={styles.input}
+                  placeholder="비밀번호"
+                  required
+                />
+              </div>
+            </div>
 
-          {error && <p className={styles.errorMsg}>{error}</p>}
+            {error && <p className={styles.errorMsg}>{error}</p>}
 
-          <button type="submit" className={styles.submitBtn}>
-            입궐하기 (로그인)
-          </button>
-        </form>
+            <div className={styles.buttonGroup}>
+              <button type="submit" className={styles.loginBtn}>
+                로그인
+              </button>
+              
+              <button type="button" onClick={handleRegister} className={styles.registerBtn}>
+                새 어린이 등록
+              </button>
+
+              <button type="button" onClick={handleGuestLogin} className={styles.guestBtn}>
+                가입 안하고 둘러보기 👀
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
     </main>
   );

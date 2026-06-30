@@ -109,7 +109,7 @@ export default function Home() {
   if (!user) return null;
 
   return (
-    <main className={styles.main}>
+    <main className={styles.mainContainer}>
       {showEthicsGate && <EthicsGate onAgree={handleAgreeEthics} />}
       {isLocked && <LockScreen onUnlock={() => setIsLocked(false)} />}
       {showAchievements && <AchievementsModal onClose={() => setShowAchievements(false)} />}
@@ -136,7 +136,7 @@ export default function Home() {
             </div>
 
             <div className={styles.inputArea}>
-              <SuggestionChips onSelect={(text) => handleSend(text)} />
+              <SuggestionChips onChipClick={(text) => handleSend(text)} />
               <div className={styles.inputFormWrapper}>
                 <input
                   type="text"

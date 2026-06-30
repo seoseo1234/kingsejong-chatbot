@@ -1,18 +1,18 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 5px;
+  margin-bottom: 5px;
 }
 
 .chip {
   background-color: var(--bg-white);
   border: 2px solid var(--border-brown);
   border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 6px 12px;
+  font-size: 14px;
   color: var(--text-dark);
   font-family: var(--font-kids);
   font-weight: 500;

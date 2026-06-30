@@ -7,14 +7,13 @@ export default function SidebarMenu({ onOpenAchievements, onOpenFunFacts, onPlay
         🌟 세종대왕의 업적
       </button>
 
-      <div className={styles.wordGameGroup}>
-        <button className={styles.subBtn} onClick={onOpenFunFacts}>
-          ❓ 재미있는 사실
-        </button>
-        <button className={styles.subBtn} onClick={() => onPlayWordGame("세종대왕님, 우리 말놀이 해요!")}>
-          🎮 한글 게임
-        </button>
-      </div>
+      <button className={styles.subBtn} onClick={onOpenFunFacts}>
+        ❓ 재미있는 사실
+      </button>
+
+      <button className={styles.subBtn} onClick={() => onPlayWordGame("세종대왕님, 우리 말놀이 해요!")}>
+        🎮 한글 게임
+      </button>
     </div>
   );
 }

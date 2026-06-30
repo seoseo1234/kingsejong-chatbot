@@ -34,7 +34,7 @@ ${conversationText}
 4. 글머리 기호(- 또는 •)를 사용하지 말고 자연스러운 문장으로 작성하세요.
 `;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const result = await model.generateContent(prompt);
     const summary = result.response.text();
 

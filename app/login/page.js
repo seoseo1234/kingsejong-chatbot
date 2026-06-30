@@ -33,7 +33,7 @@ export default function LoginPage() {
       router.push('/');
     } catch (err) {
       console.error(err);
-      setError('둘러보기(게스트 로그인)에 실패했습니다.');
+      setError(`둘러보기 실패: ${err.code || err.message}`);
     }
   };
 

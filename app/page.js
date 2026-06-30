@@ -114,47 +114,54 @@ export default function Home() {
       {isLocked && <LockScreen onUnlock={() => setIsLocked(false)} />}
       {showAchievements && <AchievementsModal onClose={() => setShowAchievements(false)} />}
       {showFunFacts && <FunFactsModal onClose={() => setShowFunFacts(false)} />}
-      
-      <header className={styles.header}>
-        <button onClick={handleFinish} className={styles.finishBtn}>대화 마치기 (요약)</button>
-        <CharacterView state={isTyping ? 'thinking' : 'idle'} />
-        <SidebarMenu 
-          onOpenAchievements={() => setShowAchievements(true)}
-          onOpenFunFacts={() => setShowFunFacts(true)}
-          onPlayWordGame={(gameText) => handleSend(gameText)}
-        />
-        <button onClick={handleLogout} className={styles.logoutBtn}>퇴궐 (로그아웃)</button>
-      </header>
+      <div className={styles.mainContent}>
+        <header className={styles.header}>
+          <div className={styles.topNav}>
+            <button onClick={handleFinish} className={styles.finishBtn}>대화 마치기</button>
+            <button onClick={handleLogout} className={styles.logoutBtn}>퇴궐 (로그아웃)</button>
+          </div>
+        </header>
 
-      <div className={styles.chatSide}>
-        <div className={styles.chatContainer} ref={chatContainerRef}>
-          {messages.map((msg, idx) => (
-            <ChatBubble key={idx} role={msg.role} content={msg.content} />
-          ))}
-          {isTyping && <ChatBubble role="assistant" content="..." />}
+        <div className={styles.tabletScreen}>
+          <div className={styles.characterArea}>
+            <CharacterView state={isTyping ? 'thinking' : 'idle'} />
+          </div>
+          
+          <div className={styles.chatArea}>
+            <div className={styles.chatContainer} ref={chatContainerRef}>
+              {messages.map((msg, index) => (
+                <ChatBubble key={index} role={msg.role} content={msg.content} />
+              ))}
+              {isTyping && <div className={styles.typingIndicator}>세종대왕님이 글을 쓰고 계십니다...</div>}
+            </div>
+
+            <div className={styles.inputArea}>
+              <SuggestionChips onSelect={(text) => handleSend(text)} />
+              <div className={styles.inputFormWrapper}>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                  placeholder="여기에 글을 써주세요..."
+                  className={styles.input}
+                  disabled={isTyping}
+                />
+                <button onClick={() => handleSend()} disabled={isTyping || !input.trim()} className={styles.sendBtn}>
+                  보내기 ✏️
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <SuggestionChips 
-          onChipClick={(text) => handleSend(text)} 
-          disabled={isTyping || isLocked}
-        />
-
-        <form 
-          className={styles.inputArea} 
-          onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-        >
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="세종대왕님께 물어보세요!"
-            className={styles.input}
-            disabled={isTyping || isLocked}
+        <div className={styles.bottomMenu}>
+          <SidebarMenu 
+            onOpenAchievements={() => setShowAchievements(true)}
+            onOpenFunFacts={() => setShowFunFacts(true)}
+            onPlayWordGame={(gameText) => handleSend(gameText)}
           />
-          <button type="submit" className={styles.sendBtn} disabled={!input.trim() || isTyping || isLocked}>
-            ➤
-          </button>
-        </form>
+        </div>
       </div>
     </main>
   );

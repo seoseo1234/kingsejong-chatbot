@@ -1,19 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 :root {
-  /* Joseon Palace Theme Colors */
-  --royal-red: #8B0000;
-  --royal-red-light: #B22222;
-  --palace-gold: #D4AF37;
-  --palace-gold-light: #F3E5AB;
-  --deep-blue: #0F1B29;
-  --hanji-paper: #F4EEDF;
-  --text-dark: #2C2825;
-  --text-light: #FAF9F6;
-  --border-color: rgba(212, 175, 55, 0.3);
+  /* Kids Edutainment Theme */
+  --bg-cream: #FFF8EA;
+  --bg-beige: #FFE4C4;
+  --bg-white: #FFFFFF;
   
-  --font-serif: 'Noto Serif KR', serif;
-  --font-sans: 'Noto Sans KR', sans-serif;
+  --border-brown: #C19A6B;
+  --border-thick: #8B4513;
+  
+  --btn-yellow: #FFD700;
+  --btn-yellow-border: #FFA500;
+  
+  --btn-green: #32CD32;
+  --btn-green-border: #228B22;
+  
+  --btn-pink: #FF69B4;
+  --btn-pink-border: #C71585;
+  
+  --text-dark: #3E2723;
+  --text-white: #FFFFFF;
+  
+  --font-kids: 'Jua', 'Noto Sans KR', sans-serif;
+  
+  /* Fallbacks */
+  --royal-red: var(--btn-pink);
+  --royal-red-light: var(--btn-pink-border);
+  --palace-gold: var(--btn-yellow-border);
+  --palace-gold-light: var(--btn-yellow);
+  --deep-blue: var(--btn-green);
+  --hanji-paper: var(--bg-cream);
+  --border-color: var(--border-brown);
 }
 
 * {
@@ -23,13 +40,9 @@
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--hanji-paper);
+  font-family: var(--font-kids);
+  background-color: var(--bg-cream);
   color: var(--text-dark);
-  /* Sublte paper texture using CSS radial gradients */
-  background-image: radial-gradient(var(--palace-gold-light) 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-attachment: fixed;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

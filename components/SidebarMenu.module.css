@@ -1,69 +1,81 @@
 .sidebar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
   width: 100%;
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border: 2px solid var(--border-color);
-}
-
-.title {
-  text-align: center;
-  color: var(--royal-red);
-  margin: 0 0 10px 0;
-  font-size: 18px;
-}
-
-.menuBtn {
-  background: var(--palace-gold-light);
-  color: var(--text-dark);
-  border: 2px solid var(--palace-gold);
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.menuBtn:hover {
-  background: var(--palace-gold);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.wordGameGroup {
-  margin-top: 10px;
-  padding-top: 15px;
-  border-top: 2px dashed var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.subtitle {
-  color: var(--text-dark);
-  margin: 0 0 5px 0;
-  font-size: 15px;
-}
-
-.subBtn {
-  background: #f5f5f5;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.subBtn:hover {
-  background: var(--royal-red);
-  color: white;
-  border-color: var(--royal-red);
+.title, .wordGameGroup, .subtitle {
+  display: none; /* Hide these since we just want 3 bottom buttons */
+}
+
+.menuBtn, .subBtn {
+  flex: 1;
+  max-width: 250px;
+  padding: 15px 20px;
+  border-radius: 9999px; /* Pill shape */
+  font-size: 24px;
+  font-weight: bold;
+  font-family: var(--font-kids);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.1s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 3D Glossy Highlight */
+.menuBtn::before, .subBtn::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 10%;
+  width: 80%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* Button 1: Yellow (Achievements) */
+.menuBtn {
+  background: var(--btn-yellow);
+  color: var(--text-dark);
+  border: 4px solid var(--btn-yellow-border);
+  box-shadow: 0 6px 0 var(--btn-yellow-border);
+}
+
+.menuBtn:active {
+  transform: translateY(6px);
+  box-shadow: none;
+}
+
+/* Button 2: Green (Fun Facts) */
+.subBtn:nth-child(2) {
+  background: var(--btn-green);
+  color: var(--text-white);
+  border: 4px solid var(--btn-green-border);
+  box-shadow: 0 6px 0 var(--btn-green-border);
+  -webkit-text-stroke: 1px #228B22; /* Outline text */
+}
+
+.subBtn:nth-child(2):active {
+  transform: translateY(6px);
+  box-shadow: none;
+}
+
+/* Button 3: Pink (Word Game) */
+.subBtn:nth-child(3) {
+  background: var(--btn-pink);
+  color: var(--text-white);
+  border: 4px solid var(--btn-pink-border);
+  box-shadow: 0 6px 0 var(--btn-pink-border);
+  -webkit-text-stroke: 1px #C71585;
+}
+
+.subBtn:nth-child(3):active {
+  transform: translateY(6px);
+  box-shadow: none;
 }

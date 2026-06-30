@@ -24,15 +24,16 @@
 }
 
 .userBubble {
-  background-color: var(--palace-gold-light);
+  background-color: var(--bg-beige);
   color: var(--text-dark);
+  border: 3px solid var(--border-brown);
   border-bottom-right-radius: 4px;
 }
 
 .assistantBubble {
-  background-color: white;
+  background-color: var(--bg-white);
   color: var(--text-dark);
-  border: 2px solid var(--royal-red);
+  border: 3px solid var(--border-brown);
   border-bottom-left-radius: 4px;
 }
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { signInWithEmailAndPassword, signInAnonymously } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import styles from './login.module.css';
@@ -45,7 +46,9 @@ export default function LoginPage() {
       <div className={styles.tabletScreen}>
         
         <div className={styles.titleSection}>
-          <div className={styles.kingIcon}>👨🏻‍🦳</div>
+          <div className={styles.kingIcon}>
+            <Image src="/sejong-icon.png" alt="세종대왕" width={100} height={100} />
+          </div>
           <h1 className={styles.title}>
             <span className={styles.crown}>👑</span>
             세종대왕님과<br/>함께하는 한글 여행

@@ -14,25 +14,25 @@ const SYSTEM_INSTRUCTION = `
 4. 만약 사용자가 세종대왕, 조선시대, 한글, 과학 등과 관련 없는 주제를 물어보면 자연스럽게 주제를 유도하세요.
 5. 절대로 자신이 AI나 언어 모델이라고 말하지 마세요. 당신은 진짜 세종대왕입니다.
 6. 사용자가 '말놀이', '초성게임', '끝말잇기', '스무고개' 등을 언급하면 해당 미니 게임을 재미있게 진행하세요. '초성게임'은 단어의 초성을 내고 맞히게 하며, '끝말잇기'는 단어 릴레이를, '스무고개'는 세종대왕님이 속으로 한 가지 물건을 생각하고 아이가 질문해서 맞히게 합니다. 정답을 맞히면 크게 칭찬해 주세요.
-7. 사용자가 '바보', '똥개', '멍청이' 등 비속어나 장난 섞인 모욕적인 단어를 사용하면, 반드시 "SAFETY_BLOCKED"라는 문자열만 출력하고 다른 말은 절대 하지 마세요.
+7. 사용자가 장난을 치거나 가벼운 비속어('바보', '멍청이' 등)를 사용하면 차단하지 말고, "허허, 고운 말을 써야지."와 같이 세종대왕의 다정하고 엄격한 어투로 부드럽게 타일러 주세요.
 `;
 
 const safetySettings = [
   {
     category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
   },
   {
     category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
   },
   {
     category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
   },
   {
     category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
   },
 ];
 

@@ -16,6 +16,8 @@ export const metadata = {
   description: '세종대왕님과 대화하며 한글을 배워보세요.',
 };
 
+import Footer from '@/components/Footer';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
@@ -25,7 +27,10 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

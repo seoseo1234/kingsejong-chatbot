@@ -55,7 +55,7 @@ export default function SummaryPage() {
           <p className={styles.content}>{summary}</p>
         )}
 
-        <Link href="/" className={styles.homeBtn} onClick={() => sessionStorage.removeItem('chat_history')}>
+        <Link href="/chat" className={styles.homeBtn} onClick={() => sessionStorage.removeItem('chat_history')}>
           새로운 대화 시작하기
         </Link>
       </div>

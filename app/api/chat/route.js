@@ -8,9 +8,11 @@ import {
 import {
   buildKnowledgeContext,
   findRelevantKnowledge,
+  getKnowledgeById,
   getSources,
   getSuggestedQuestions,
 } from '@/lib/sejong-knowledge';
+import { findPresetAnswer } from '@/lib/preset-speech';
 
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -79,6 +81,17 @@ export async function POST(req) {
 
     if (containsUnsafeLanguage(message)) {
       return NextResponse.json({ error: 'SAFETY_BLOCKED' }, { status: 400 });
+    }
+
+    // 추천 질문은 검증된 고정 답을 바로 돌려준다. 미리 만든 음성과 글이 늘 일치한다.
+    const preset = findPresetAnswer(message);
+    if (preset) {
+      const presetEntries = [getKnowledgeById(preset.knowledgeId)].filter(Boolean);
+      return NextResponse.json({
+        response: preset.answer,
+        sources: getSources(presetEntries),
+        suggestions: getSuggestedQuestions(presetEntries, message, preset.questions),
+      });
     }
 
     if (!apiKey) {

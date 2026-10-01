@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
+import { StopIcon } from './UiIcons';
 import styles from './CharacterView.module.css';
 
 /**
  * 상태(state) props: 'idle' (대기), 'thinking' (API 요청 중), 'speaking' (답변 출력 중)
+ * onStop: 음성을 읽거나 준비하는 중일 때만 넘긴다. 초상화를 누르거나 그만 듣기 버튼으로 멈춘다.
  */
-export default function CharacterView({ state = 'idle' }) {
+export default function CharacterView({ state = 'idle', onStop }) {
   const videoRef = useRef(null);
   const animationClass = styles[state] || styles.idle;
   const isTalking = state === 'speaking';
+  const canStop = typeof onStop === 'function';
 
   useEffect(() => {
     const video = videoRef.current;
@@ -28,7 +31,10 @@ export default function CharacterView({ state = 'idle' }) {
 
   return (
     <div className={styles.container}>
-      <div className={`${styles.portraitFrame} ${animationClass}`}>
+      <div
+        className={`${styles.portraitFrame} ${animationClass} ${canStop ? styles.stoppable : ''}`}
+        onClick={canStop ? onStop : undefined}
+      >
         <video
           ref={videoRef}
           className={styles.character}
@@ -43,6 +49,12 @@ export default function CharacterView({ state = 'idle' }) {
         <span className={styles.reconstructionLabel}>AI 재현</span>
         <span className={styles.liveIndicator} aria-hidden="true" />
       </div>
+      {canStop && (
+        <button type="button" className={styles.stopBtn} onClick={onStop}>
+          <StopIcon />
+          그만 듣기
+        </button>
+      )}
     </div>
   );
 }

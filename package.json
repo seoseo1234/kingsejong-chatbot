@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "voices": "node --env-file=.env.local scripts/generate-voices.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -16,6 +17,7 @@
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@breezystack/lamejs": "^1.2.7",
     "eslint": "^9",
     "eslint-config-next": "16.2.9"
   }

@@ -1,36 +1,107 @@
-import React from 'react';
+"use client";
+
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { SpeakerIcon } from './UiIcons';
+import { HARD_WORDS, splitHardWords } from '@/lib/hard-words';
 import styles from './ChatBubble.module.css';
 
-const dictionary = {
-  '훈민정음': '백성을 가르치는 바른 소리라는 뜻으로, 세종대왕님이 만든 한글의 옛 이름이야.',
-  '집현전': '세종대왕님이 똑똑한 신하들과 함께 공부하고 연구하던 조선시대의 큰 연구실이야.',
-  '측우기': '비가 얼마나 오는지 양을 재는 그릇이야.',
-  '경복궁': '조선시대 왕이 살면서 나라를 다스리던 아주 큰 궁궐이야.',
-  '앙부일구': '해의 그림자를 보고 시간을 알 수 있게 만든 해시계야.',
-  '자격루': '물이 흐르는 힘을 이용해서 자동으로 시간을 알려주는 물시계야.'
-};
+const VIEWPORT_MARGIN = 12;
+const TOOLTIP_GAP = 10;
+
+// 어려운 낱말: 누르면 풀이가 열리고, 다시 누르거나 다른 곳을 누르면 닫힌다. 마우스는 올리기만 해도 보인다.
+// 채팅창 스크롤 영역에 가려지지 않도록 풀이는 body 에 띄운다.
+function HardWord({ word }) {
+  const [isPinned, setIsPinned] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const triggerRef = useRef(null);
+  const tooltipRef = useRef(null);
+  const tooltipId = useId();
+  const isOpen = isPinned || isHovered;
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    const trigger = triggerRef.current.getBoundingClientRect();
+    const tooltip = tooltipRef.current;
+    const { width, height } = tooltip.getBoundingClientRect();
+    const center = trigger.left + trigger.width / 2;
+    const left = Math.min(
+      Math.max(center - width / 2, VIEWPORT_MARGIN),
+      window.innerWidth - width - VIEWPORT_MARGIN,
+    );
+    const placeBelow = trigger.top - height - TOOLTIP_GAP < VIEWPORT_MARGIN;
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${placeBelow ? trigger.bottom + TOOLTIP_GAP : trigger.top - height - TOOLTIP_GAP}px`;
+    tooltip.style.setProperty('--arrow-left', `${center - left}px`);
+    tooltip.dataset.placement = placeBelow ? 'below' : 'above';
+    tooltip.style.visibility = 'visible';
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const close = () => {
+      setIsPinned(false);
+      setIsHovered(false);
+    };
+    const handlePointerDown = (event) => {
+      if (triggerRef.current?.contains(event.target) || tooltipRef.current?.contains(event.target)) return;
+      close();
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') close();
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('resize', close);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('resize', close);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        className={`${styles.hardWord} ${isOpen ? styles.hardWordOpen : ''}`}
+        aria-expanded={isOpen}
+        aria-describedby={isOpen ? tooltipId : undefined}
+        onClick={() => {
+          setIsPinned((pinned) => !pinned);
+          setIsHovered(false);
+        }}
+        onPointerEnter={(event) => event.pointerType === 'mouse' && setIsHovered(true)}
+        onPointerLeave={(event) => event.pointerType === 'mouse' && setIsHovered(false)}
+      >
+        {word}
+      </button>
+      {isOpen && createPortal(
+        <span ref={tooltipRef} id={tooltipId} role="tooltip" className={styles.tooltip}>
+          <strong>{word}</strong>
+          {HARD_WORDS[word]}
+        </span>,
+        document.body,
+      )}
+    </>
+  );
+}
 
 export default function ChatBubble({ role, content, sources = [], onSpeak }) {
   const isUser = role === 'user';
-  
+
   const renderContent = () => {
     if (isUser) return content;
-    
-    const pattern = new RegExp(`(${Object.keys(dictionary).join('|')})`, 'g');
-    const parts = content.split(pattern);
-    
-    return parts.map((part, index) => {
-      if (dictionary[part]) {
-        return (
-          <span key={index} className={styles.hardWordWrapper}>
-            <span className={styles.hardWord}>{part}</span>
-            <span className={styles.tooltip}>{dictionary[part]}</span>
-          </span>
-        );
-      }
-      return part;
-    });
+
+    return splitHardWords(content).map((part, index) => (
+      part.word ? <HardWord key={index} word={part.word} /> : part.text
+    ));
   };
 
   return (

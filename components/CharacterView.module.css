@@ -21,6 +21,36 @@
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
+.stoppable {
+  cursor: pointer;
+}
+
+.stopBtn {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--btn-pink-border);
+  border-radius: 999px;
+  background: var(--btn-pink);
+  color: var(--text-white);
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(74, 32, 32, 0.25);
+  animation: stopBtnIn 0.2s ease-out;
+  z-index: 2;
+}
+
+.stopBtn:hover {
+  background: var(--royal-red-light);
+}
+
 .character {
   width: 100%;
   height: 100%;
@@ -82,6 +112,13 @@
     height: 120px;
   }
 
+  .stopBtn {
+    bottom: -4px;
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
   .reconstructionLabel {
     bottom: 5px;
     padding: 2px 6px;
@@ -127,4 +164,9 @@
   .speaking .liveIndicator {
     animation: none;
   }
+}
+
+@keyframes stopBtnIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

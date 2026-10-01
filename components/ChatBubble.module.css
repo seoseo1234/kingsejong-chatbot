@@ -115,61 +115,77 @@
   text-decoration: underline;
 }
 
-/* Tooltip Styles */
-.hardWordWrapper {
-  position: relative;
-  display: inline-block;
+/* 어려운 낱말 풀이 */
+.hardWord {
+  display: inline;
+  padding: 0 1px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--royal-red);
+  font: inherit;
+  font-weight: 800;
+  line-height: inherit;
+  text-decoration: underline dashed var(--royal-red);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
-.hardWord {
-  color: var(--royal-red);
-  font-weight: bold;
-  cursor: help;
-  text-decoration: underline dashed var(--royal-red);
-  text-underline-offset: 4px;
+.hardWord:hover,
+.hardWordOpen {
+  background: rgba(152, 69, 69, 0.1);
 }
 
 .tooltip {
-  visibility: hidden;
-  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: min(260px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border-radius: 10px;
   background-color: var(--text-dark);
   color: #fff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 12px;
-  position: absolute;
-  z-index: 100;
-  bottom: 125%; 
-  left: 50%;
-  margin-left: -125px;
-  opacity: 0;
-  transition: opacity 0.3s;
   font-size: 16px;
-  line-height: 1.4;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  line-height: 1.45;
+  text-align: left;
   word-break: keep-all;
-  font-weight: normal;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  visibility: hidden;
+  animation: tooltipIn 0.15s ease-out;
+  pointer-events: auto;
+}
+
+.tooltip strong {
+  color: #f3d6a0;
+  font-size: 15px;
 }
 
 .tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
+  left: var(--arrow-left, 50%);
   margin-left: -6px;
-  border-width: 6px;
-  border-style: solid;
-  border-color: var(--text-dark) transparent transparent transparent;
+  border: 6px solid transparent;
 }
 
-.hardWordWrapper:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
+.tooltip[data-placement="above"]::after {
+  top: 100%;
+  border-top-color: var(--text-dark);
 }
 
-.hardWordWrapper:focus-within .tooltip {
-  visibility: visible;
-  opacity: 1;
+.tooltip[data-placement="below"]::after {
+  bottom: 100%;
+  border-bottom-color: var(--text-dark);
+}
+
+@keyframes tooltipIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
@@ -195,9 +211,6 @@
     max-width: min(260px, 76vw);
   }
 
-  .tooltip {
-    width: min(250px, 75vw);
-  }
 }
 
 @keyframes slideUp {

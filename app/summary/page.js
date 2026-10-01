@@ -11,7 +11,7 @@ export default function SummaryPage() {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const historyStr = localStorage.getItem('chat_history');
+        const historyStr = sessionStorage.getItem('chat_history');
         if (!historyStr) {
           setSummary('대화 기록이 없어 요약할 수 없습니다.');
           setLoading(false);
@@ -55,7 +55,7 @@ export default function SummaryPage() {
           <p className={styles.content}>{summary}</p>
         )}
 
-        <Link href="/" className={styles.homeBtn} onClick={() => localStorage.removeItem('chat_history')}>
+        <Link href="/" className={styles.homeBtn} onClick={() => sessionStorage.removeItem('chat_history')}>
           새로운 대화 시작하기
         </Link>
       </div>

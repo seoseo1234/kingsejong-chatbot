@@ -146,3 +146,15 @@
   background: var(--btn-pink);
   border: 2px solid var(--btn-pink-border);
 }
+
+@media (max-width: 600px) {
+  .overlay { padding: 8px; }
+  .modal { max-height: 94dvh; padding: 16px; border-width: 4px; overflow-y: auto; }
+  .header { margin-bottom: 14px; }
+  .header h2 { font-size: 21px; }
+  .content { gap: 6px; }
+  .navBtn { width: 40px; height: 40px; font-size: 18px; }
+  .imageWrapper { width: min(190px, 52vw); height: min(190px, 52vw); }
+  .card h3 { font-size: 22px; }
+  .card p { font-size: 16px; }
+}

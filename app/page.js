@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import CharacterView from '@/components/CharacterView';
 import ChatBubble from '@/components/ChatBubble';
 import SuggestionChips from '@/components/SuggestionChips';
@@ -15,9 +13,6 @@ import FunFactsModal from '@/components/FunFactsModal';
 import styles from './page.module.css';
 
 export default function Home() {
-  const [user, setUser] = useState(null);
-  const [loadingAuth, setLoadingAuth] = useState(true);
-  
   const [messages, setMessages] = useState([
     { role: 'assistant', content: '반갑다, 2학년 학생들아! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?' }
   ]);
@@ -32,23 +27,17 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (!currentUser) {
-        router.push('/login');
-      } else {
-        setUser(currentUser);
-        const agreed = localStorage.getItem('ethics_agreed');
-        if (agreed === 'true') {
-          setShowEthicsGate(false);
-        }
+    const timer = window.setTimeout(() => {
+      const agreed = sessionStorage.getItem('ethics_agreed');
+      if (agreed === 'true') {
+        setShowEthicsGate(false);
       }
-      setLoadingAuth(false);
-    });
-    return () => unsubscribe();
-  }, [router]);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const handleAgreeEthics = () => {
-    localStorage.setItem('ethics_agreed', 'true');
+    sessionStorage.setItem('ethics_agreed', 'true');
     setShowEthicsGate(false);
   };
 
@@ -80,6 +69,7 @@ export default function Home() {
 
       if (!res.ok) {
         if (data.error === 'SAFETY_BLOCKED') {
+          setMessages(messages);
           setIsLocked(true);
         } else {
           setMessages(prev => [...prev, { role: 'assistant', content: '미안하구나, 잠깐 집중을 잃었단다. 다시 말해주겠느냐?' }]);
@@ -96,17 +86,10 @@ export default function Home() {
   };
 
   const handleFinish = async () => {
-    // 요약 페이지로 상태 전달 (localStorage 임시 사용)
-    localStorage.setItem('chat_history', JSON.stringify(messages));
+    // 요약 페이지로 상태 전달 (브라우저 세션이 끝나면 자동 삭제)
+    sessionStorage.setItem('chat_history', JSON.stringify(messages));
     router.push('/summary');
   };
-
-  const handleLogout = async () => {
-    await signOut(auth);
-  };
-
-  if (loadingAuth) return <div style={{textAlign: 'center', padding: '50px'}}>조선으로 가는 중...</div>;
-  if (!user) return null;
 
   return (
     <main className={styles.mainContainer}>
@@ -118,7 +101,6 @@ export default function Home() {
         <header className={styles.header}>
           <div className={styles.topNav}>
             <button onClick={handleFinish} className={styles.finishBtn}>대화 마치기</button>
-            <button onClick={handleLogout} className={styles.logoutBtn}>퇴궐 (로그아웃)</button>
           </div>
         </header>
 
@@ -142,8 +124,9 @@ export default function Home() {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="여기에 글을 써주세요..."
+                  aria-label="세종대왕에게 질문하기"
                   className={styles.input}
                   disabled={isTyping}
                 />

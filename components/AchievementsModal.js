@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from './AchievementsModal.module.css';
 
 const ACHIEVEMENTS = [
@@ -40,7 +41,12 @@ export default function AchievementsModal({ onClose }) {
           
           <div className={styles.card}>
             <div className={styles.imageWrapper}>
-              <img src={ACHIEVEMENTS[currentIndex].img} alt={ACHIEVEMENTS[currentIndex].title} />
+              <Image
+                src={ACHIEVEMENTS[currentIndex].img}
+                alt={ACHIEVEMENTS[currentIndex].title}
+                width={250}
+                height={250}
+              />
             </div>
             <h3>{ACHIEVEMENTS[currentIndex].title}</h3>
             <p>{ACHIEVEMENTS[currentIndex].desc}</p>

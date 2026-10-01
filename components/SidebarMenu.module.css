@@ -77,3 +77,17 @@
   transform: translateY(6px);
   box-shadow: none;
 }
+
+@media (max-width: 768px) {
+  .sidebar {
+    gap: 6px;
+    padding: 4px 0 8px;
+  }
+
+  .menuBtn, .subBtn {
+    min-height: 48px;
+    padding: 9px 6px;
+    border-width: 3px;
+    font-size: 15px;
+  }
+}

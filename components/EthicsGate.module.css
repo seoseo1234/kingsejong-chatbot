@@ -95,6 +95,7 @@
 
 .contentSection {
   flex: 1;
+  min-width: 0;
 }
 
 .contentSection h4 {
@@ -166,15 +167,31 @@
 }
 
 @media (max-width: 768px) {
+  .overlay { padding: 8px; overflow: hidden; }
+  .modal { min-width: 0; max-width: calc(100vw - 16px); max-height: 96dvh; overflow-x: hidden; }
+  .header { padding: 10px 0; }
+  .guideList { min-width: 0; padding: 14px; overflow-x: hidden; }
   .guideItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    width: 100%;
+    min-width: 0;
   }
   .header h1:first-child { display: none; }
   .badges { width: 100%; flex-direction: row; justify-content: flex-start; }
   .badgeOrange, .badgeGreen, .badgeBlue, .badgeYellow { width: auto; }
-  .titleSection { align-items: flex-start; flex: none; }
+  .titleSection { align-items: flex-start; flex: none; width: 100%; }
   .titleSection h2 { display: inline-block; margin-right: 10px; }
   .titleSection h3 { display: inline-block; }
+  .contentSection { width: 100%; max-width: 100%; }
+  .contentSection h4,
+  .contentSection p { overflow-wrap: anywhere; word-break: normal; }
+  .contentSection h4 { font-size: 16px; }
+  .contentSection p { font-size: 14px; }
+  .divider { margin: 14px 0; }
+  .footer { padding: 12px; gap: 10px; }
+  .checkboxLabel { align-items: flex-start; width: 100%; min-width: 0; font-size: 15px; line-height: 1.4; }
+  .checkbox { flex: 0 0 24px; }
+  .agreeBtn { width: 100%; min-height: 48px; padding: 10px 20px; }
 }

@@ -39,3 +39,18 @@
   cursor: not-allowed;
   transform: none;
 }
+
+@media (max-width: 768px) {
+  .container {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 4px 2px 8px;
+    scrollbar-width: thin;
+  }
+
+  .chip {
+    min-height: 40px;
+    flex: 0 0 auto;
+  }
+}

@@ -99,3 +99,13 @@
   line-height: 1.5;
   word-break: keep-all;
 }
+
+@media (max-width: 600px) {
+  .overlay { padding: 8px; }
+  .modal { max-height: 94dvh; padding: 16px; border-width: 4px; }
+  .header { margin-bottom: 14px; }
+  .header h2 { font-size: 21px; }
+  .factCard { align-items: flex-start; padding: 14px; }
+  .emoji { font-size: 34px; }
+  .textSection h3 { font-size: 19px; }
+}

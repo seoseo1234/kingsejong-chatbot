@@ -89,6 +89,27 @@
   opacity: 1;
 }
 
+.hardWordWrapper:focus-within .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .bubbleContainer {
+    margin-bottom: 8px;
+  }
+
+  .bubble {
+    max-width: 88%;
+    padding: 11px 14px;
+    font-size: 17px;
+  }
+
+  .tooltip {
+    width: min(250px, 75vw);
+  }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;

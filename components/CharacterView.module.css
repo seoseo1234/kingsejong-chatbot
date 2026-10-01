@@ -29,6 +29,18 @@
   }
 }
 
+@media (max-width: 768px) {
+  .container {
+    height: 130px;
+    margin-bottom: 0;
+  }
+
+  .character {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 /* Animations based on state */
 .idle {
   animation: float 3s ease-in-out infinite;

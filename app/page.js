@@ -14,6 +14,7 @@ import HangulGame from '@/components/HangulGame';
 import { MicIcon, SendIcon } from '@/components/UiIcons';
 import styles from './page.module.css';
 
+const WELCOME_MESSAGE = '반갑다, 2학년 학생들아! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?';
 const MALE_VOICE_HINTS = ['injoon', 'hyunsu', 'joon', 'male', '남성'];
 const NATURAL_VOICE_HINTS = ['natural', 'neural', 'online', 'premium'];
 const FEMALE_VOICE_HINTS = ['sunhi', 'heami', 'yuna', 'female', '여성'];
@@ -51,7 +52,7 @@ async function loadSpeechVoices(synthesis) {
 
 export default function Home() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: '반갑다, 2학년 학생들아! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?' }
+    { role: 'assistant', content: WELCOME_MESSAGE }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -73,6 +74,8 @@ export default function Home() {
   const ttsAbortRef = useRef(null);
   const audioCacheRef = useRef(new Map());
   const presentationTimerRef = useRef(null);
+  const handleSpeakRef = useRef(null);
+  const welcomePlayedRef = useRef(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -255,9 +258,24 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    handleSpeakRef.current = handleSpeak;
+  });
+
+  useEffect(() => {
+    if (showEthicsGate || welcomePlayedRef.current) return;
+
+    welcomePlayedRef.current = true;
+    void handleSpeakRef.current?.(WELCOME_MESSAGE);
+  }, [showEthicsGate]);
+
   const handleSend = async (text = input) => {
     if (!text.trim() || isTyping || isLocked) return;
 
+    stopGeneratedAudio();
+    window.speechSynthesis?.cancel();
+    setIsSpeaking(false);
+    setVoiceStatus('');
     window.clearTimeout(presentationTimerRef.current);
     setIsPresentingAnswer(false);
     

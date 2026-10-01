@@ -13,21 +13,22 @@
 }
 
 .modal {
-  background: white;
+  background: var(--surface-raised);
   width: 100%;
   max-width: 900px;
   max-height: 90vh;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 24px 70px rgba(24, 20, 16, 0.28);
   overflow: hidden;
   font-family: 'Gowun Dodum', sans-serif;
 }
 
 .header {
   display: flex;
-  background: #f19f2a;
+  background: var(--ink-blue);
   color: white;
   padding: 15px 0;
 }
@@ -68,10 +69,10 @@
   gap: 8px;
 }
 
-.badgeOrange { background: #ed7d31; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
-.badgeGreen { background: #70ad47; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
-.badgeBlue { background: #4472c4; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
-.badgeYellow { background: #ffc000; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeOrange { background: #a96043; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeGreen { background: #587561; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeBlue { background: #526e82; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
+.badgeYellow { background: #a9823f; color: white; border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: bold; width: 100%; text-align: center; }
 
 .titleSection {
   flex: 0 0 120px;
@@ -83,7 +84,7 @@
 
 .titleSection h2 {
   font-size: 18px;
-  color: #ed7d31;
+  color: var(--royal-red);
   margin: 0 0 5px 0;
 }
 
@@ -114,14 +115,14 @@
 
 .divider {
   height: 1px;
-  background: #f19f2a;
+  background: var(--line-soft);
   margin: 20px 0;
 }
 
 .footer {
   padding: 20px;
-  background: #f9f9f9;
-  border-top: 1px solid #ddd;
+  background: var(--surface-soft);
+  border-top: 1px solid var(--line-soft);
   display: flex;
   flex-direction: column;
   align-items: center;

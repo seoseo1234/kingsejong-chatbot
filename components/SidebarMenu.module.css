@@ -1,93 +1,63 @@
 .sidebar {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   width: 100%;
-  padding: 10px;
 }
 
-.title, .wordGameGroup, .subtitle {
-  display: none; /* Hide these since we just want 3 bottom buttons */
+.toolBtn {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--ink-blue);
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(48, 39, 28, 0.06);
 }
 
-.menuBtn, .subBtn {
-  flex: 1;
-  max-width: 250px;
-  padding: 15px 20px;
-  border-radius: 9999px; /* Pill shape */
-  font-size: 24px;
-  font-weight: bold;
-  font-family: var(--font-kids);
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.1s;
-  position: relative;
+.toolBtn span {
+  min-width: 0;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* 3D Glossy Highlight */
-.menuBtn::before, .subBtn::before {
-  content: '';
-  position: absolute;
-  top: 5px;
-  left: 10%;
-  width: 80%;
-  height: 30%;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 9999px;
-  pointer-events: none;
+.toolBtn:hover {
+  border-color: var(--palace-gold);
+  background: #fffdf8;
+  transform: translateY(-1px);
 }
 
-/* Button 1: Yellow (Achievements) */
-.menuBtn {
-  background: var(--btn-yellow);
-  color: var(--text-dark);
-  border: 4px solid var(--btn-yellow-border);
-  box-shadow: 0 6px 0 var(--btn-yellow-border);
+.toolBtn:focus-visible {
+  outline: 3px solid rgba(47, 75, 94, 0.25);
+  outline-offset: 2px;
 }
 
-.menuBtn:active {
-  transform: translateY(6px);
-  box-shadow: none;
+.toolBtn:active {
+  transform: translateY(0);
 }
 
-/* Button 2: Green (Fun Facts) */
-.subBtn:nth-child(2) {
-  background: var(--btn-green);
-  color: var(--text-dark);
-  border: 4px solid var(--btn-green-border);
-  box-shadow: 0 6px 0 var(--btn-green-border);
-}
-
-.subBtn:nth-child(2):active {
-  transform: translateY(6px);
-  box-shadow: none;
-}
-
-/* Button 3: Pink (Word Game) */
-.subBtn:nth-child(3) {
-  background: var(--btn-pink);
-  color: var(--text-dark);
-  border: 4px solid var(--btn-pink-border);
-  box-shadow: 0 6px 0 var(--btn-pink-border);
-}
-
-.subBtn:nth-child(3):active {
-  transform: translateY(6px);
-  box-shadow: none;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .sidebar {
-    gap: 6px;
-    padding: 4px 0 8px;
+    gap: 5px;
   }
 
-  .menuBtn, .subBtn {
-    min-height: 48px;
-    padding: 9px 6px;
-    border-width: 3px;
-    font-size: 15px;
+  .toolBtn {
+    min-height: 46px;
+    padding: 8px 5px;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .toolBtn svg {
+    width: 18px;
+    height: 18px;
   }
 }

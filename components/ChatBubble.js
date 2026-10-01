@@ -1,4 +1,5 @@
 import React from 'react';
+import { SpeakerIcon } from './UiIcons';
 import styles from './ChatBubble.module.css';
 
 const dictionary = {
@@ -10,7 +11,7 @@ const dictionary = {
   '자격루': '물이 흐르는 힘을 이용해서 자동으로 시간을 알려주는 물시계야.'
 };
 
-export default function ChatBubble({ role, content }) {
+export default function ChatBubble({ role, content, sources = [], onSpeak }) {
   const isUser = role === 'user';
   
   const renderContent = () => {
@@ -34,8 +35,29 @@ export default function ChatBubble({ role, content }) {
 
   return (
     <div className={`${styles.bubbleContainer} ${isUser ? styles.userContainer : styles.assistantContainer}`}>
-      <div className={`${styles.bubble} ${isUser ? styles.userBubble : styles.assistantBubble}`}>
-        {renderContent()}
+      <div className={styles.messageBlock}>
+        <div className={styles.messageLabel}>{isUser ? '나' : '세종대왕'}</div>
+        <div className={`${styles.bubble} ${isUser ? styles.userBubble : styles.assistantBubble}`}>
+          {renderContent()}
+        </div>
+        {!isUser && (
+          <div className={styles.messageTools}>
+            <button type="button" onClick={() => onSpeak?.(content)} className={styles.speakBtn}>
+              <SpeakerIcon />
+              답변 듣기
+            </button>
+            {sources.length > 0 && (
+              <div className={styles.sources}>
+                <span>확인한 자료</span>
+                {sources.map((source) => (
+                  <a key={source.url} href={source.url} target="_blank" rel="noreferrer">
+                    {source.title}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

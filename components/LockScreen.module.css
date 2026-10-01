@@ -10,14 +10,14 @@
 }
 
 .card {
-  background: white;
+  background: var(--surface-raised);
   padding: 40px;
   border-radius: 20px;
   text-align: center;
   max-width: 400px;
   width: 90%;
-  border: 4px solid var(--royal-red);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 24px 70px rgba(24,20,16,0.32);
   animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -39,7 +39,7 @@
   text-align: center;
   width: 100%;
   padding: 10px;
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--line-soft);
   border-radius: 10px;
   margin-bottom: 20px;
   font-family: monospace;
@@ -51,7 +51,7 @@
 }
 
 .unlockBtn {
-  background: var(--royal-red);
+  background: var(--ink-blue);
   color: white;
   font-size: 18px;
   font-weight: bold;
@@ -61,7 +61,7 @@
 }
 
 .unlockBtn:hover {
-  background: var(--royal-red-light);
+  background: #223b4b;
 }
 
 .unlockBtn:disabled {

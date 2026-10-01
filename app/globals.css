@@ -1,34 +1,35 @@
 :root {
-  /* Kids Edutainment Theme */
-  --bg-cream: #FFF8EA;
-  --bg-beige: #FFE4C4;
-  --bg-white: #FFFFFF;
-  
-  --border-brown: #C19A6B;
-  --border-thick: #8B4513;
-  
-  --btn-yellow: #FFD700;
-  --btn-yellow-border: #FFA500;
-  
-  --btn-green: #32CD32;
-  --btn-green-border: #228B22;
-  
-  --btn-pink: #FF69B4;
-  --btn-pink-border: #C71585;
-  
-  --text-dark: #3E2723;
-  --text-white: #FFFFFF;
+  --bg-cream: #f3eee5;
+  --bg-beige: #e9ddcb;
+  --bg-white: #fffdf9;
+  --surface-raised: #fffdf9;
+  --surface-soft: #f4ede2;
+  --line-soft: #d9cdbd;
+  --border-brown: #b9a586;
+  --border-thick: #3a332c;
+
+  --btn-yellow: #c69a4b;
+  --btn-yellow-border: #9d7532;
+  --btn-green: #587561;
+  --btn-green-border: #3e5947;
+  --btn-pink: #a34d4d;
+  --btn-pink-border: #7e3434;
+
+  --text-dark: #2f2923;
+  --text-muted: #71675c;
+  --text-white: #ffffff;
+  --ink-blue: #2f4b5e;
   
   --font-kids: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   --font-serif: 'Batang', 'Noto Serif KR', serif;
   --font-sans: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   
   /* Fallbacks */
-  --royal-red: var(--btn-pink);
-  --royal-red-light: var(--btn-pink-border);
-  --palace-gold: var(--btn-yellow-border);
-  --palace-gold-light: var(--btn-yellow);
-  --deep-blue: var(--btn-green);
+  --royal-red: #984545;
+  --royal-red-light: #7d3535;
+  --palace-gold: #b5873d;
+  --palace-gold-light: #ead8b6;
+  --deep-blue: var(--ink-blue);
   --hanji-paper: var(--bg-cream);
   --border-color: var(--border-brown);
 }
@@ -59,6 +60,13 @@ button {
   border: none;
   outline: none;
   transition: all 0.2s ease-in-out;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(47, 75, 94, 0.28);
+  outline-offset: 2px;
 }
 
 /* Global animations */

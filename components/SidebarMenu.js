@@ -1,19 +1,23 @@
 import styles from './SidebarMenu.module.css';
+import { BookIcon, GameIcon, LightIcon } from './UiIcons';
 
-export default function SidebarMenu({ onOpenAchievements, onOpenFunFacts, onPlayWordGame }) {
+export default function SidebarMenu({ onOpenAchievements, onOpenFunFacts, onOpenGame }) {
   return (
-    <div className={styles.sidebar}>
-      <button className={styles.menuBtn} onClick={onOpenAchievements}>
-        🌟 세종대왕의 업적
+    <nav className={styles.sidebar} aria-label="학습 도구">
+      <button className={styles.toolBtn} onClick={onOpenAchievements}>
+        <BookIcon />
+        <span>업적 보기</span>
       </button>
 
-      <button className={styles.subBtn} onClick={onOpenFunFacts}>
-        ❓ 재미있는 사실
+      <button className={styles.toolBtn} onClick={onOpenFunFacts}>
+        <LightIcon />
+        <span>재미있는 사실</span>
       </button>
 
-      <button className={styles.subBtn} onClick={() => onPlayWordGame("세종대왕님, 우리 말놀이 해요!")}>
-        🎮 한글 게임
+      <button className={styles.toolBtn} onClick={onOpenGame}>
+        <GameIcon />
+        <span>한글 놀이</span>
       </button>
-    </div>
+    </nav>
   );
 }

@@ -104,7 +104,7 @@
 
 .confirmButton {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: var(--ink-blue);
   color: white;
   border: none;
   border-radius: 6px;
@@ -114,7 +114,7 @@
 }
 
 .confirmButton:hover {
-  background-color: #0056b3;
+  background-color: #223b4b;
 }
 
 .loading {

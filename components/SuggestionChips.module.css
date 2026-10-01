@@ -1,36 +1,38 @@
 .container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  padding: 5px;
-  margin-bottom: 5px;
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-start;
+  padding: 2px 1px 7px;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .chip {
-  background-color: var(--bg-white);
-  border: 2px solid var(--border-brown);
-  border-radius: 20px;
-  padding: 6px 12px;
-  font-size: 14px;
-  color: var(--text-dark);
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 6px 11px;
+  border: 1px solid #cdb999;
+  border-radius: 10px;
+  background: rgba(255, 253, 249, 0.9);
+  color: #56493c;
   font-family: var(--font-kids);
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.1s;
-  box-shadow: 0 4px 0 var(--border-brown);
+  transition: all 0.15s ease;
 }
 
 .chip:hover {
-  background-color: var(--palace-gold-light);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--palace-gold);
+  background: #fffaf0;
+  color: var(--ink-blue);
+  transform: translateY(-1px);
 }
 
 .chip:active {
-  transform: translateY(4px);
-  box-shadow: none;
+  transform: translateY(0);
   background-color: var(--bg-beige);
 }
 
@@ -42,15 +44,11 @@
 
 @media (max-width: 768px) {
   .container {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding: 4px 2px 8px;
-    scrollbar-width: thin;
+    padding-bottom: 6px;
   }
 
   .chip {
-    min-height: 40px;
-    flex: 0 0 auto;
+    min-height: 36px;
+    font-size: 12px;
   }
 }

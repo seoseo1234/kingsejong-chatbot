@@ -1,6 +1,6 @@
 .bubbleContainer {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   width: 100%;
   animation: slideUp 0.3s ease-out;
 }
@@ -13,28 +13,106 @@
   justify-content: flex-start;
 }
 
+.messageBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 78%;
+}
+
+.userContainer .messageBlock {
+  align-items: flex-end;
+}
+
+.messageLabel {
+  margin: 0 4px 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .bubble {
-  max-width: 75%;
-  padding: 16px 20px;
-  border-radius: 20px;
-  font-size: 20px; /* 초등학교 2학년 대상이므로 글씨를 큼직하게 */
+  width: fit-content;
+  padding: 14px 17px;
+  border-radius: 16px;
+  font-size: 18px;
   line-height: 1.5;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(48, 39, 28, 0.06);
   word-break: keep-all;
 }
 
 .userBubble {
-  background-color: var(--bg-beige);
+  background-color: #f1e5d4;
   color: var(--text-dark);
-  border: 3px solid var(--border-brown);
-  border-bottom-right-radius: 4px;
+  border: 1px solid #d2b991;
+  border-bottom-right-radius: 5px;
 }
 
 .assistantBubble {
   background-color: var(--bg-white);
   color: var(--text-dark);
-  border: 3px solid var(--border-brown);
-  border-bottom-left-radius: 4px;
+  border: 1px solid var(--line-soft);
+  border-bottom-left-radius: 5px;
+}
+
+.messageTools {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-top: 7px;
+}
+
+.speakBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  background: var(--surface-raised);
+  color: var(--ink-blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.speakBtn:hover {
+  background: var(--surface-soft);
+}
+
+.sources {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.sources > span {
+  padding: 5px 7px;
+  font-weight: 800;
+}
+
+.sources a {
+  max-width: 260px;
+  overflow: hidden;
+  padding: 5px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  color: var(--ink-blue);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sources a:hover {
+  border-color: var(--palace-gold);
+  text-decoration: underline;
 }
 
 /* Tooltip Styles */
@@ -99,10 +177,22 @@
     margin-bottom: 8px;
   }
 
+  .messageBlock {
+    max-width: 90%;
+  }
+
   .bubble {
-    max-width: 88%;
     padding: 11px 14px;
     font-size: 17px;
+  }
+
+  .sources {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sources a {
+    max-width: min(260px, 76vw);
   }
 
   .tooltip {

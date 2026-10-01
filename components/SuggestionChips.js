@@ -2,18 +2,18 @@
 
 import styles from './SuggestionChips.module.css';
 
-const DEFAULT_CHIPS = [
+export const DEFAULT_CHIPS = [
   "한글은 왜 만드셨나요?",
-  "고기를 정말 좋아하셨나요?",
-  "어릴 때 별명이 무엇인가요?"
+  "측우기로 비를 어떻게 쟀나요?",
+  "앙부일구는 어떻게 시간을 알려주나요?"
 ];
 
-export default function SuggestionChips({ onChipClick, disabled }) {
+export default function SuggestionChips({ suggestions = DEFAULT_CHIPS, onChipClick, disabled }) {
   return (
     <div className={styles.container}>
-      {DEFAULT_CHIPS.map((chip, idx) => (
+      {suggestions.map((chip) => (
         <button
-          key={idx}
+          key={chip}
           className={styles.chip}
           onClick={() => onChipClick(chip)}
           disabled={disabled}

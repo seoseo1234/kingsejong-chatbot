@@ -14,6 +14,41 @@ import HangulGame from '@/components/HangulGame';
 import { MicIcon, SendIcon } from '@/components/UiIcons';
 import styles from './page.module.css';
 
+const MALE_VOICE_HINTS = ['injoon', 'hyunsu', 'joon', 'male', '남성'];
+const NATURAL_VOICE_HINTS = ['natural', 'neural', 'online', 'premium'];
+const FEMALE_VOICE_HINTS = ['sunhi', 'heami', 'yuna', 'female', '여성'];
+
+function selectNarratorVoice(voices) {
+  return voices
+    .filter((voice) => voice.lang.toLowerCase().startsWith('ko'))
+    .map((voice) => {
+      const name = voice.name.toLowerCase();
+      const naturalScore = NATURAL_VOICE_HINTS.some((hint) => name.includes(hint)) ? 80 : 0;
+      const maleScore = MALE_VOICE_HINTS.some((hint) => name.includes(hint)) ? 60 : 0;
+      const femalePenalty = FEMALE_VOICE_HINTS.some((hint) => name.includes(hint)) ? -40 : 0;
+      const onlineScore = voice.localService ? 0 : 15;
+      return { voice, score: naturalScore + maleScore + femalePenalty + onlineScore };
+    })
+    .sort((a, b) => b.score - a.score)[0]?.voice;
+}
+
+async function loadSpeechVoices(synthesis) {
+  const available = synthesis.getVoices();
+  if (available.length > 0) return available;
+
+  return new Promise((resolve) => {
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      synthesis.removeEventListener?.('voiceschanged', finish);
+      resolve(synthesis.getVoices());
+    };
+    synthesis.addEventListener?.('voiceschanged', finish, { once: true });
+    window.setTimeout(finish, 700);
+  });
+}
+
 export default function Home() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: '반갑다, 2학년 학생들아! 짐은 조선의 4대 왕 세종이로다. 나에게 궁금한 것이 있느냐?' }
@@ -32,6 +67,10 @@ export default function Home() {
   
   const chatContainerRef = useRef(null);
   const recognitionRef = useRef(null);
+  const audioRef = useRef(null);
+  const audioUrlRef = useRef(null);
+  const ttsAbortRef = useRef(null);
+  const audioCacheRef = useRef(new Map());
   const router = useRouter();
 
   useEffect(() => {
@@ -57,6 +96,9 @@ export default function Home() {
 
   useEffect(() => () => {
     recognitionRef.current?.abort();
+    ttsAbortRef.current?.abort();
+    audioRef.current?.pause();
+    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
     window.speechSynthesis?.cancel();
   }, []);
 
@@ -93,21 +135,33 @@ export default function Home() {
     recognition.start();
   };
 
-  const handleSpeak = (text) => {
+  const speakWithBrowserVoice = async (text, isFallback = false) => {
     if (!('speechSynthesis' in window)) {
+      setIsSpeaking(false);
       setVoiceStatus('이 브라우저에서는 읽어주기를 지원하지 않습니다.');
       return;
     }
 
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    const synthesis = window.speechSynthesis;
+    synthesis.cancel();
+    setVoiceStatus(isFallback
+      ? 'Gemini 음성을 불러오지 못해 기기의 기본 목소리로 읽습니다.'
+      : '세종대왕님의 목소리를 준비하고 있습니다.');
+
+    const voices = await loadSpeechVoices(synthesis);
+    const narratorVoice = selectNarratorVoice(voices);
+    const spokenText = text
+      .replace(/\s+/g, ' ')
+      .replace(/([.!?])\s*/g, '$1  ')
+      .trim();
+    const utterance = new SpeechSynthesisUtterance(spokenText);
     utterance.lang = 'ko-KR';
-    utterance.rate = 0.88;
-    utterance.pitch = 0.95;
-    const koreanVoice = window.speechSynthesis
-      .getVoices()
-      .find((voice) => voice.lang.toLowerCase().startsWith('ko'));
-    if (koreanVoice) utterance.voice = koreanVoice;
+    utterance.rate = narratorVoice && NATURAL_VOICE_HINTS.some(
+      (hint) => narratorVoice.name.toLowerCase().includes(hint),
+    ) ? 0.9 : 0.82;
+    utterance.pitch = 0.78;
+    utterance.volume = 1;
+    if (narratorVoice) utterance.voice = narratorVoice;
     utterance.onstart = () => {
       setIsSpeaking(true);
       setVoiceStatus('세종대왕님의 답변을 읽고 있습니다.');
@@ -120,7 +174,82 @@ export default function Home() {
       setIsSpeaking(false);
       setVoiceStatus('답변을 읽지 못했습니다.');
     };
-    window.speechSynthesis.speak(utterance);
+    synthesis.speak(utterance);
+  };
+
+  const stopGeneratedAudio = () => {
+    ttsAbortRef.current?.abort();
+    ttsAbortRef.current = null;
+    audioRef.current?.pause();
+    audioRef.current = null;
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+  };
+
+  const handleSpeak = async (text) => {
+    stopGeneratedAudio();
+    window.speechSynthesis?.cancel();
+    setIsSpeaking(false);
+    setVoiceStatus('자연스러운 세종대왕 목소리를 준비하고 있습니다.');
+
+    const controller = new AbortController();
+    ttsAbortRef.current = controller;
+
+    try {
+      let audioBlob = audioCacheRef.current.get(text);
+
+      if (!audioBlob) {
+        const response = await fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) throw new Error('Gemini TTS request failed');
+
+        audioBlob = await response.blob();
+        if (!audioBlob.type.startsWith('audio/')) throw new Error('Invalid audio response');
+
+        if (audioCacheRef.current.size >= 8) {
+          const oldestKey = audioCacheRef.current.keys().next().value;
+          audioCacheRef.current.delete(oldestKey);
+        }
+        audioCacheRef.current.set(text, audioBlob);
+      }
+
+      if (controller.signal.aborted) return;
+
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audioUrlRef.current = audioUrl;
+      ttsAbortRef.current = null;
+
+      audio.onplay = () => {
+        setIsSpeaking(true);
+        setVoiceStatus('세종대왕님의 목소리로 읽고 있습니다.');
+      };
+      audio.onended = () => {
+        stopGeneratedAudio();
+        setIsSpeaking(false);
+        setVoiceStatus('');
+      };
+      audio.onerror = () => {
+        stopGeneratedAudio();
+        setIsSpeaking(false);
+        setVoiceStatus('음성을 재생하지 못했습니다. 다시 눌러주세요.');
+      };
+
+      await audio.play();
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      console.warn('Gemini TTS 재생 실패, 브라우저 음성으로 전환합니다.', error);
+      stopGeneratedAudio();
+      await speakWithBrowserVoice(text, true);
+    }
   };
 
   const handleSend = async (text = input) => {

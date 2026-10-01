@@ -50,6 +50,30 @@ async function loadSpeechVoices(synthesis) {
   });
 }
 
+// 같은 문장의 음성 요청은 하나의 Promise로 공유해 중복 요청을 막고, 미리 받아둔 음성을 바로 재생한다.
+function requestSpeechBlob(cache, text) {
+  if (cache.has(text)) return cache.get(text);
+
+  const request = fetch('/api/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  }).then(async (response) => {
+    if (!response.ok) throw new Error('Gemini TTS request failed');
+    const blob = await response.blob();
+    if (!blob.type.startsWith('audio/')) throw new Error('Invalid audio response');
+    return blob;
+  });
+  request.catch(() => cache.delete(text));
+
+  if (cache.size >= 8) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+  cache.set(text, request);
+  return request;
+}
+
 export default function Home() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: WELCOME_MESSAGE }
@@ -64,7 +88,6 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState(DEFAULT_CHIPS);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isPresentingAnswer, setIsPresentingAnswer] = useState(false);
   const [voiceStatus, setVoiceStatus] = useState('');
   
   const chatContainerRef = useRef(null);
@@ -73,10 +96,15 @@ export default function Home() {
   const audioUrlRef = useRef(null);
   const ttsAbortRef = useRef(null);
   const audioCacheRef = useRef(new Map());
-  const presentationTimerRef = useRef(null);
+  const playUnlockCleanupRef = useRef(null);
   const handleSpeakRef = useRef(null);
   const welcomePlayedRef = useRef(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // 윤리 안내를 읽는 동안 환영 인사 음성을 미리 받아 두어, 입장하자마자 바로 재생되게 한다.
+    requestSpeechBlob(audioCacheRef.current, WELCOME_MESSAGE).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -102,7 +130,7 @@ export default function Home() {
   useEffect(() => () => {
     recognitionRef.current?.abort();
     ttsAbortRef.current?.abort();
-    window.clearTimeout(presentationTimerRef.current);
+    playUnlockCleanupRef.current?.();
     audioRef.current?.pause();
     if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
     window.speechSynthesis?.cancel();
@@ -186,6 +214,8 @@ export default function Home() {
   const stopGeneratedAudio = () => {
     ttsAbortRef.current?.abort();
     ttsAbortRef.current = null;
+    playUnlockCleanupRef.current?.();
+    playUnlockCleanupRef.current = null;
     audioRef.current?.pause();
     audioRef.current = null;
     if (audioUrlRef.current) {
@@ -204,27 +234,7 @@ export default function Home() {
     ttsAbortRef.current = controller;
 
     try {
-      let audioBlob = audioCacheRef.current.get(text);
-
-      if (!audioBlob) {
-        const response = await fetch('/api/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-          signal: controller.signal,
-        });
-
-        if (!response.ok) throw new Error('Gemini TTS request failed');
-
-        audioBlob = await response.blob();
-        if (!audioBlob.type.startsWith('audio/')) throw new Error('Invalid audio response');
-
-        if (audioCacheRef.current.size >= 8) {
-          const oldestKey = audioCacheRef.current.keys().next().value;
-          audioCacheRef.current.delete(oldestKey);
-        }
-        audioCacheRef.current.set(text, audioBlob);
-      }
+      const audioBlob = await requestSpeechBlob(audioCacheRef.current, text);
 
       if (controller.signal.aborted) return;
 
@@ -249,9 +259,27 @@ export default function Home() {
         setVoiceStatus('음성을 재생하지 못했습니다. 다시 눌러주세요.');
       };
 
-      await audio.play();
+      try {
+        await audio.play();
+      } catch (playError) {
+        if (playError?.name !== 'NotAllowedError') throw playError;
+
+        // 브라우저 자동재생 정책으로 막히면, 사용자가 화면을 처음 누르는 순간 이어서 재생한다.
+        setVoiceStatus('화면을 한 번 눌러 주면 세종대왕님 말씀이 들린단다.');
+        const resume = () => {
+          playUnlockCleanupRef.current?.();
+          playUnlockCleanupRef.current = null;
+          if (audioRef.current === audio) audio.play().catch(() => {});
+        };
+        window.addEventListener('pointerdown', resume, { once: true });
+        window.addEventListener('keydown', resume, { once: true });
+        playUnlockCleanupRef.current = () => {
+          window.removeEventListener('pointerdown', resume);
+          window.removeEventListener('keydown', resume);
+        };
+      }
     } catch (error) {
-      if (error?.name === 'AbortError') return;
+      if (error?.name === 'AbortError' || controller.signal.aborted) return;
       console.warn('Gemini TTS 재생 실패, 브라우저 음성으로 전환합니다.', error);
       stopGeneratedAudio();
       await speakWithBrowserVoice(text, true);
@@ -276,9 +304,7 @@ export default function Home() {
     window.speechSynthesis?.cancel();
     setIsSpeaking(false);
     setVoiceStatus('');
-    window.clearTimeout(presentationTimerRef.current);
-    setIsPresentingAnswer(false);
-    
+
     const newMessages = [...messages, { role: 'user', content: text }];
     setMessages(newMessages);
     setInput('');
@@ -309,13 +335,6 @@ export default function Home() {
           content: data.response,
           sources: Array.isArray(data.sources) ? data.sources : [],
         }]);
-        window.clearTimeout(presentationTimerRef.current);
-        setIsPresentingAnswer(true);
-        const presentationDuration = Math.min(6000, Math.max(2400, data.response.length * 35));
-        presentationTimerRef.current = window.setTimeout(
-          () => setIsPresentingAnswer(false),
-          presentationDuration,
-        );
         if (Array.isArray(data.suggestions) && data.suggestions.length > 0) {
           setSuggestions(data.suggestions);
         }
@@ -356,7 +375,7 @@ export default function Home() {
         <div className={styles.tabletScreen}>
           <div className={styles.characterArea}>
             <CharacterView
-              state={isSpeaking || isPresentingAnswer ? 'speaking' : isTyping ? 'thinking' : 'idle'}
+              state={isSpeaking ? 'speaking' : isTyping ? 'thinking' : 'idle'}
             />
           </div>
           

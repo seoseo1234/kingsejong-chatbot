@@ -7,23 +7,65 @@
   margin-bottom: 20px;
 }
 
-.character {
+.portraitFrame {
   width: 180px;
   height: 180px;
-  background-image: url('/images/sejong.png');
-  background-size: cover;
-  background-position: center;
   border-radius: 50%;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-  border: 4px solid var(--palace-gold);
-  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid rgba(169, 124, 48, 0.72);
+  background: #6f4b35;
+  box-shadow:
+    0 18px 40px rgba(74, 46, 27, 0.2),
+    0 0 0 7px rgba(255, 250, 240, 0.62);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.character {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.liveIndicator {
+  position: absolute;
+  right: 12%;
+  bottom: 10%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f3d6a0;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(48, 28, 16, 0.28);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.reconstructionLabel {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  background: rgba(36, 24, 18, 0.58);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
 }
 
 @media (min-width: 800px) {
   .container {
     height: 350px;
   }
-  .character {
+  .portraitFrame {
     width: 280px;
     height: 280px;
   }
@@ -35,38 +77,54 @@
     margin-bottom: 0;
   }
 
-  .character {
+  .portraitFrame {
     width: 120px;
     height: 120px;
+  }
+
+  .reconstructionLabel {
+    bottom: 5px;
+    padding: 2px 6px;
+    font-size: 8px;
   }
 }
 
 /* Animations based on state */
 .idle {
-  animation: float 3s ease-in-out infinite;
+  transform: scale(1);
 }
 
 .thinking {
-  animation: pulse 1.5s ease-in-out infinite;
+  animation: attentive 2.2s ease-in-out infinite;
 }
 
 .speaking {
-  animation: bounce 0.5s ease-in-out infinite alternate;
+  box-shadow:
+    0 18px 42px rgba(74, 46, 27, 0.22),
+    0 0 0 7px rgba(255, 250, 240, 0.72),
+    0 0 0 11px rgba(177, 126, 53, 0.16);
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+.thinking .liveIndicator,
+.speaking .liveIndicator {
+  opacity: 1;
+  animation: indicatorPulse 1.4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+@keyframes attentive {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.012); }
 }
 
-@keyframes bounce {
-  0% { transform: translateY(0px) rotate(-2deg); }
-  100% { transform: translateY(-5px) rotate(2deg); }
+@keyframes indicatorPulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.55; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thinking,
+  .thinking .liveIndicator,
+  .speaking .liveIndicator {
+    animation: none;
+  }
 }

@@ -63,6 +63,7 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState(DEFAULT_CHIPS);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPresentingAnswer, setIsPresentingAnswer] = useState(false);
   const [voiceStatus, setVoiceStatus] = useState('');
   
   const chatContainerRef = useRef(null);
@@ -71,6 +72,7 @@ export default function Home() {
   const audioUrlRef = useRef(null);
   const ttsAbortRef = useRef(null);
   const audioCacheRef = useRef(new Map());
+  const presentationTimerRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -97,6 +99,7 @@ export default function Home() {
   useEffect(() => () => {
     recognitionRef.current?.abort();
     ttsAbortRef.current?.abort();
+    window.clearTimeout(presentationTimerRef.current);
     audioRef.current?.pause();
     if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
     window.speechSynthesis?.cancel();
@@ -254,6 +257,9 @@ export default function Home() {
 
   const handleSend = async (text = input) => {
     if (!text.trim() || isTyping || isLocked) return;
+
+    window.clearTimeout(presentationTimerRef.current);
+    setIsPresentingAnswer(false);
     
     const newMessages = [...messages, { role: 'user', content: text }];
     setMessages(newMessages);
@@ -285,6 +291,13 @@ export default function Home() {
           content: data.response,
           sources: Array.isArray(data.sources) ? data.sources : [],
         }]);
+        window.clearTimeout(presentationTimerRef.current);
+        setIsPresentingAnswer(true);
+        const presentationDuration = Math.min(6000, Math.max(2400, data.response.length * 35));
+        presentationTimerRef.current = window.setTimeout(
+          () => setIsPresentingAnswer(false),
+          presentationDuration,
+        );
         if (Array.isArray(data.suggestions) && data.suggestions.length > 0) {
           setSuggestions(data.suggestions);
         }
@@ -323,7 +336,9 @@ export default function Home() {
 
         <div className={styles.tabletScreen}>
           <div className={styles.characterArea}>
-            <CharacterView state={isTyping ? 'thinking' : isSpeaking ? 'speaking' : 'idle'} />
+            <CharacterView
+              state={isSpeaking || isPresentingAnswer ? 'speaking' : isTyping ? 'thinking' : 'idle'}
+            />
           </div>
           
           <div className={styles.chatArea}>

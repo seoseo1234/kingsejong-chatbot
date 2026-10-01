@@ -44,7 +44,7 @@ export default function ChatBubble({ role, content, sources = [], onSpeak }) {
           <div className={styles.messageTools}>
             <button type="button" onClick={() => onSpeak?.(content)} className={styles.speakBtn}>
               <SpeakerIcon />
-              답변 듣기
+              다시 듣기
             </button>
             {sources.length > 0 && (
               <div className={styles.sources}>

@@ -301,6 +301,7 @@ export default function Home() {
         if (Array.isArray(data.suggestions) && data.suggestions.length > 0) {
           setSuggestions(data.suggestions);
         }
+        void handleSpeak(data.response);
       }
     } catch (err) {
       console.error(err);

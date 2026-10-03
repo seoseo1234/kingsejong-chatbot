@@ -1,38 +1,72 @@
 .sidebar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
 .toolBtn {
+  position: relative;
+  overflow: hidden;
   min-width: 0;
-  min-height: 48px;
-  padding: 10px 14px;
+  min-height: 78px;
+  padding: 14px 112px 14px 22px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid var(--line-soft);
-  border-radius: 12px;
-  background: var(--surface-raised);
+  justify-content: flex-start;
+  border: 2px solid #e5b84e;
+  border-radius: 20px;
+  background-color: #fff0b2;
+  background-image:
+    linear-gradient(90deg, rgba(255, 246, 204, 0.98) 0 44%, rgba(255, 240, 178, 0.82) 61%, rgba(255, 240, 178, 0.05) 82%),
+    url('/images/button-achievements.png');
+  background-repeat: no-repeat;
+  background-position: center, right -4px center;
+  background-size: auto, auto 125%;
   color: var(--ink-blue);
-  font-size: 15px;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(48, 39, 28, 0.06);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 5px 0 #c99436, 0 9px 16px rgba(91, 65, 32, 0.14);
+}
+
+.toolBtn:nth-child(2) {
+  border-color: #68b6bc;
+  background-color: #cfeee8;
+  background-image:
+    linear-gradient(90deg, rgba(224, 249, 240, 0.98) 0 44%, rgba(199, 236, 231, 0.8) 61%, rgba(199, 236, 231, 0.04) 82%),
+    url('/images/button-facts.png');
+  color: #285b60;
+  box-shadow: 0 5px 0 #4c9298, 0 9px 16px rgba(39, 92, 95, 0.14);
+}
+
+.toolBtn:nth-child(3) {
+  border-color: #e18080;
+  background-color: #ffd8da;
+  background-image:
+    linear-gradient(90deg, rgba(255, 235, 232, 0.98) 0 44%, rgba(255, 210, 211, 0.8) 61%, rgba(255, 210, 211, 0.04) 82%),
+    url('/images/button-hangul-game.png');
+  color: var(--royal-red);
+  box-shadow: 0 5px 0 #c65e67, 0 9px 16px rgba(133, 55, 65, 0.14);
+}
+
+.toolBtn svg {
+  display: none;
 }
 
 .toolBtn span {
+  position: relative;
+  z-index: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .toolBtn:hover {
-  border-color: var(--palace-gold);
-  background: #fffdf8;
-  transform: translateY(-1px);
+  transform: translateY(-3px) rotate(-0.5deg);
+  filter: saturate(1.08) brightness(1.02);
 }
 
 .toolBtn:focus-visible {
@@ -41,23 +75,34 @@
 }
 
 .toolBtn:active {
-  transform: translateY(0);
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(73, 54, 32, 0.4);
 }
 
 @media (max-width: 480px) {
   .sidebar {
-    gap: 5px;
+    gap: 6px;
   }
 
   .toolBtn {
-    min-height: 46px;
-    padding: 8px 5px;
-    gap: 4px;
+    min-height: 62px;
+    justify-content: center;
+    padding: 8px 4px;
+    border-width: 1px;
+    border-radius: 15px;
+    background-position: center;
+    background-size: auto, cover;
     font-size: 12px;
+    text-align: center;
+    box-shadow: 0 4px 0 rgba(79, 60, 40, 0.25);
   }
 
-  .toolBtn svg {
-    width: 18px;
-    height: 18px;
+  .toolBtn span {
+    max-width: calc(100% - 8px);
+    overflow: hidden;
+    padding: 5px 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.84);
+    text-overflow: ellipsis;
   }
 }

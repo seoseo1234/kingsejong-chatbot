@@ -18,7 +18,7 @@ export default function HomePage() {
               src="/images/sejong-realistic-poster.webp"
               alt="세종대왕 초상"
               fill
-              sizes="(max-width: 768px) 132px, 180px"
+              sizes="(max-width: 768px) 170px, 230px"
               loading="eager"
               className={styles.portraitImage}
             />

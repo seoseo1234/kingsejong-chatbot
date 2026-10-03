@@ -20,9 +20,10 @@
   --text-white: #ffffff;
   --ink-blue: #2f4b5e;
   
-  --font-kids: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-  --font-serif: 'Batang', 'Noto Serif KR', serif;
-  --font-sans: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --font-kids: var(--font-gowun-dodum), 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --font-display: var(--font-jua), 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --font-serif: var(--font-jua), 'Batang', 'Noto Serif KR', serif;
+  --font-sans: var(--font-gowun-dodum), 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
   
   /* Fallbacks */
   --royal-red: #984545;
@@ -55,7 +56,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 button {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   cursor: pointer;
   border: none;
   outline: none;

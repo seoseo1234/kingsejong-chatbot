@@ -35,11 +35,11 @@
 
 .portrait {
   position: relative;
-  width: 180px;
-  height: 180px;
+  width: 230px;
+  height: 280px;
   overflow: hidden;
   border: 3px solid rgba(169, 124, 48, 0.72);
-  border-radius: 50%;
+  border-radius: 28px;
   background: #6f4b35;
   box-shadow:
     0 14px 32px rgba(74, 46, 27, 0.2),
@@ -189,8 +189,9 @@
   }
 
   .portrait {
-    width: 132px;
-    height: 132px;
+    width: 170px;
+    height: 200px;
+    border-radius: 22px;
   }
 
   .eyebrow {
@@ -240,8 +241,8 @@
   }
 
   .portrait {
-    width: clamp(120px, 22vh, 180px);
-    height: clamp(120px, 22vh, 180px);
+    width: clamp(190px, 28vh, 230px);
+    height: clamp(230px, 34vh, 280px);
   }
 
   .eyebrow {

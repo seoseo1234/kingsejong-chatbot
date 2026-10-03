@@ -3,7 +3,7 @@
   flex-wrap: nowrap;
   gap: 6px;
   justify-content: flex-start;
-  padding: 2px 1px 7px;
+  padding: 3px 1px 8px;
   overflow-x: auto;
   scrollbar-width: thin;
 }
@@ -12,23 +12,41 @@
   flex: 0 0 auto;
   min-height: 34px;
   padding: 6px 11px;
-  border: 1px solid #cdb999;
-  border-radius: 10px;
-  background: rgba(255, 253, 249, 0.9);
+  border: 2px solid #e1b961;
+  border-radius: 999px;
+  background: #fff9dc;
   color: #56493c;
   font-family: var(--font-kids);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
+.chip:nth-child(2) {
+  border-color: #79aec0;
+  background: #ecf8fb;
+}
+
+.chip:nth-child(3) {
+  border-color: #e39a8e;
+  background: #fff0ed;
+}
+
+.chip::before {
+  margin-right: 5px;
+  color: var(--palace-gold);
+  content: '✦';
+  font-size: 10px;
+}
+
 .chip:hover {
   border-color: var(--palace-gold);
-  background: #fffaf0;
+  background: #fff8e9;
   color: var(--ink-blue);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(85, 61, 36, 0.1);
 }
 
 .chip:active {

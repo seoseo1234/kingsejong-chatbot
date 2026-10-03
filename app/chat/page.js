@@ -12,44 +12,9 @@ import SidebarMenu from '@/components/SidebarMenu';
 import AchievementsModal from '@/components/AchievementsModal';
 import FunFactsModal from '@/components/FunFactsModal';
 import HangulGame from '@/components/HangulGame';
-import { MicIcon, SendIcon } from '@/components/UiIcons';
+import { GameIcon, MicIcon, SendIcon } from '@/components/UiIcons';
 import { WELCOME_MESSAGE, getPresetVoiceUrl } from '@/lib/preset-speech';
 import styles from './page.module.css';
-
-const MALE_VOICE_HINTS = ['injoon', 'hyunsu', 'joon', 'male', '남성'];
-const NATURAL_VOICE_HINTS = ['natural', 'neural', 'online', 'premium'];
-const FEMALE_VOICE_HINTS = ['sunhi', 'heami', 'yuna', 'female', '여성'];
-
-function selectNarratorVoice(voices) {
-  return voices
-    .filter((voice) => voice.lang.toLowerCase().startsWith('ko'))
-    .map((voice) => {
-      const name = voice.name.toLowerCase();
-      const naturalScore = NATURAL_VOICE_HINTS.some((hint) => name.includes(hint)) ? 80 : 0;
-      const maleScore = MALE_VOICE_HINTS.some((hint) => name.includes(hint)) ? 60 : 0;
-      const femalePenalty = FEMALE_VOICE_HINTS.some((hint) => name.includes(hint)) ? -40 : 0;
-      const onlineScore = voice.localService ? 0 : 15;
-      return { voice, score: naturalScore + maleScore + femalePenalty + onlineScore };
-    })
-    .sort((a, b) => b.score - a.score)[0]?.voice;
-}
-
-async function loadSpeechVoices(synthesis) {
-  const available = synthesis.getVoices();
-  if (available.length > 0) return available;
-
-  return new Promise((resolve) => {
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      synthesis.removeEventListener?.('voiceschanged', finish);
-      resolve(synthesis.getVoices());
-    };
-    synthesis.addEventListener?.('voiceschanged', finish, { once: true });
-    window.setTimeout(finish, 700);
-  });
-}
 
 async function readAudioBlob(response) {
   if (!response.ok) throw new Error(`Audio request failed: ${response.status}`);
@@ -182,51 +147,6 @@ export default function ChatPage() {
     recognition.start();
   };
 
-  const speakWithBrowserVoice = async (text, runId, isFallback = false) => {
-    if (!('speechSynthesis' in window)) {
-      setIsSpeaking(false);
-      setVoiceStatus('이 브라우저에서는 읽어주기를 지원하지 않습니다.');
-      return;
-    }
-
-    const synthesis = window.speechSynthesis;
-    synthesis.cancel();
-    setVoiceStatus(isFallback
-      ? 'Gemini 음성을 불러오지 못해 기기의 기본 목소리로 읽습니다.'
-      : '세종대왕님의 목소리를 준비하고 있습니다.');
-
-    const voices = await loadSpeechVoices(synthesis);
-    if (runId !== speechRunRef.current) return;
-    const narratorVoice = selectNarratorVoice(voices);
-    const spokenText = text
-      .replace(/\s+/g, ' ')
-      .replace(/([.!?])\s*/g, '$1  ')
-      .trim();
-    const utterance = new SpeechSynthesisUtterance(spokenText);
-    utterance.lang = 'ko-KR';
-    utterance.rate = narratorVoice && NATURAL_VOICE_HINTS.some(
-      (hint) => narratorVoice.name.toLowerCase().includes(hint),
-    ) ? 0.9 : 0.82;
-    utterance.pitch = 0.78;
-    utterance.volume = 1;
-    if (narratorVoice) utterance.voice = narratorVoice;
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-      setVoiceStatus('세종대왕님의 답변을 읽고 있습니다.');
-    };
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      setVoiceStatus('');
-    };
-    utterance.onerror = (event) => {
-      setIsSpeaking(false);
-      // 그만 듣기나 새 질문으로 멈춘 것은 오류가 아니다.
-      if (event.error === 'interrupted' || event.error === 'canceled') return;
-      setVoiceStatus('답변을 읽지 못했습니다.');
-    };
-    synthesis.speak(utterance);
-  };
-
   const stopGeneratedAudio = () => {
     ttsAbortRef.current?.abort();
     ttsAbortRef.current = null;
@@ -265,6 +185,8 @@ export default function ChatPage() {
 
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
+      audio.playbackRate = 1.1;
+      audio.preservesPitch = true;
       audioRef.current = audio;
       audioUrlRef.current = audioUrl;
       ttsAbortRef.current = null;
@@ -307,10 +229,11 @@ export default function ChatPage() {
       }
     } catch (error) {
       if (error?.name === 'AbortError' || controller.signal.aborted || runId !== speechRunRef.current) return;
-      console.warn('Gemini TTS 재생 실패, 브라우저 음성으로 전환합니다.', error);
+      console.warn('Gemini TTS 재생 실패', error);
       stopGeneratedAudio();
       setIsVoiceLoading(false);
-      await speakWithBrowserVoice(text, runId, true);
+      setIsSpeaking(false);
+      setVoiceStatus('세종대왕님의 목소리를 불러오지 못했습니다. 잠시 후 다시 눌러 주세요.');
     }
   };
 
@@ -393,12 +316,26 @@ export default function ChatPage() {
             <strong>한글 역사 교실</strong>
           </Link>
           <div className={styles.topNav}>
+            <button type="button" onClick={() => setShowGame(true)} className={styles.gameBtn}>
+              <GameIcon size={19} />
+              <span>한글 놀이</span>
+            </button>
             <button onClick={handleFinish} className={styles.finishBtn}>대화 마치기</button>
           </div>
         </header>
 
         <div className={styles.tabletScreen}>
           <div className={styles.characterArea}>
+            <div className={styles.floatingLetters} aria-hidden="true">
+              <span>가</span>
+              <span>나</span>
+              <span>다</span>
+              <span>라</span>
+            </div>
+            <div className={styles.characterPlaque} aria-hidden="true">
+              <span>조선의 제4대 임금</span>
+              <strong>세종대왕</strong>
+            </div>
             <CharacterView
               state={isSpeaking ? 'speaking' : isTyping ? 'thinking' : 'idle'}
               onStop={isSpeaking || isVoiceLoading ? stopSpeaking : undefined}
@@ -406,6 +343,13 @@ export default function ChatPage() {
           </div>
           
           <div className={styles.chatArea}>
+            <div className={styles.chatTopbar}>
+              <div>
+                <span className={styles.statusDot} aria-hidden="true" />
+                <strong>세종대왕 선생님과 이야기해요!</strong>
+              </div>
+              <span>어려운 낱말을 누르면 뜻이 짠! ✨</span>
+            </div>
             <div className={styles.chatContainer} ref={chatContainerRef}>
               {messages.map((msg, index) => (
                 <ChatBubble

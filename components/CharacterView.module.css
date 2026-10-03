@@ -2,22 +2,23 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  height: 250px;
+  height: 300px;
   position: relative;
   margin-bottom: 20px;
 }
 
 .portraitFrame {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
+  width: 220px;
+  height: 270px;
+  border-radius: 28px;
   position: relative;
   overflow: hidden;
-  border: 3px solid rgba(169, 124, 48, 0.72);
+  border: 5px solid #e2aa43;
   background: #6f4b35;
   box-shadow:
-    0 18px 40px rgba(74, 46, 27, 0.2),
-    0 0 0 7px rgba(255, 250, 240, 0.62);
+    0 16px 32px rgba(74, 46, 27, 0.22),
+    0 0 0 7px rgba(255, 252, 241, 0.9),
+    0 0 0 10px rgba(239, 118, 95, 0.16);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
@@ -93,23 +94,24 @@
 
 @media (min-width: 800px) {
   .container {
-    height: 350px;
+    height: 420px;
   }
   .portraitFrame {
-    width: 280px;
-    height: 280px;
+    width: min(300px, calc(100% - 32px));
+    height: 370px;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    height: 130px;
+    height: 182px;
     margin-bottom: 0;
   }
 
   .portraitFrame {
-    width: 120px;
-    height: 120px;
+    width: 146px;
+    height: 166px;
+    border-radius: 20px;
   }
 
   .stopBtn {
